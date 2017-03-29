@@ -1,4 +1,4 @@
-name := """chapter5-demo"""
+name := """Stock Management System"""
 
 version := "1.0"
 
