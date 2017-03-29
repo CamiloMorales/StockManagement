@@ -28,9 +28,12 @@ var MainContainer = React.createClass({
         if (this.state.data && this.state.data !== undefined) {
             return (
                 <div>
-                    <AddProduct reloadProducts={this.reloadProducts}/>
-                    <ResultTable result={this.state.data} reloadProducts={this.reloadProducts}/>
-                    <CustomerPanel result={this.state.data} reloadProducts={this.reloadProducts}/>
+                    <h1>STOCK MONITORING PANEL</h1>
+                    <div>
+                        <AddProduct reloadProducts={this.reloadProducts}/>
+                        <ResultTable result={this.state.data} reloadProducts={this.reloadProducts}/>
+                        <CustomerPanel result={this.state.data} reloadProducts={this.reloadProducts}/>
+                    </div>
                 </div>
             );
         }
@@ -70,18 +73,20 @@ var AddProduct = React.createClass({
         this.setState({quantity: event.target.value});
     },
     render:function(){
-        return(
-                <form onSubmit={this.addProduct}>
-                    <label>
-                        Product name:
-                        <input type="text" onChange={this.handleChangeName}/>
-                    </label>
-                    <label>
-                        Quantity:
-                        <input type="text" onChange={this.handleChangeQuantity}/>
-                    </label>
-                    <input type="submit" value="Add Product" />
-                </form>
+        return( <div className="panel panel-default">
+                <h3>ADD PRODUCT PANEL</h3>
+                    <form onSubmit={this.addProduct}>
+                        <label>
+                            Product name:
+                            <input type="text" onChange={this.handleChangeName}/>
+                        </label>
+                        <label>
+                            Quantity:
+                            <input type="text" onChange={this.handleChangeQuantity}/>
+                        </label>
+                        <input type="submit" value="Add Product" />
+                    </form>
+                </div>
         );
     }
 });
@@ -96,22 +101,25 @@ var ResultTable = React.createClass({
                 return <ResultItem key={index} product={ result } reloadProducts={this.reloadProductsNested}/>
             }, this);
             return(
-                <div className="row">
-                    <div className="col-md-12">
-                        <table className="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th className="col-md-4">Product id</th>
-                                <th>Product name</th>
-                                <th>Current quantity</th>
-                                <th>Refill</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {result}
-                            </tbody>
-                        </table>
-                    </div>
+                <div className="panel panel-default">
+                    <h3>CURRENT PRODUCT STATUS</h3>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <table className="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th className="col-md-4">Product id</th>
+                                        <th>Product name</th>
+                                        <th>Current quantity</th>
+                                        <th>Refill</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {result}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                 </div>
             );
         }
@@ -171,8 +179,8 @@ var ResultItem = React.createClass({
 var CustomerPanel = React.createClass({
     render:function(){
         return(
-                <div>
-                    <h1>CUSTOMER PANEL</h1>
+                <div className="panel panel-default">
+                    <h3>CUSTOMER PANEL</h3>
                     <Login_panel result={this.props.result} reloadProducts={this.props.reloadProducts}/>
                 </div>
             );
@@ -349,6 +357,8 @@ var Transaction_panel = React.createClass({
             });
         }
         return (
+            <div className="panel panel-default">
+                <h3>BUY/RESERVE PRODUCT PANEL</h3>
                 <form>
                     <label>
                         Customer name: {this.props.username}
@@ -362,6 +372,7 @@ var Transaction_panel = React.createClass({
                     <button type="button" onClick={this.handleBuy}>BUY</button>
                     <button type="button" onClick={this.handleReserve}>RESERVE</button>
                 </form>
+            </div>
             );
     }
 });
@@ -378,24 +389,28 @@ var Transactions_table = React.createClass({
             var result = this.props.transactions.map(function(result,index){
                 return <TransactionItem key={index} transaction={ result } reloadTransactionsTable={this.props.reloadTransactionsTable}/>
             }, this);
-            return ( <div className="row">
-                    <div className="col-md-12">
-                        <table className="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Transaction id</th>
-                                <th>Username</th>
-                                <th>Product name</th>
-                                <th>Transaction type</th>
-                                <th>Quantity</th>
-                                <th>Completed?</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {result}
-                            </tbody>
-                        </table>
-                    </div>
+            return (
+                <div className="panel panel-default">
+                    <h3>CUSTOMER TRANSACTIONS PANEL</h3>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <table className="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Transaction id</th>
+                                        <th>Username</th>
+                                        <th>Product name</th>
+                                        <th>Transaction type</th>
+                                        <th>Quantity</th>
+                                        <th>Completed?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {result}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                 </div>
             );
         }
