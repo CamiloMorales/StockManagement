@@ -48,6 +48,12 @@ var MainContainer = React.createClass({
 var AddProduct = React.createClass({
     addProduct: function (e) {
         e.preventDefault();
+
+        if(!this.isNumber(this.state.quantity)){
+            alert("The indicated quantity is invalid. Please input only numeric values.")
+            return;
+        }
+
         var refillUrl = "/stock/addProduct?productName="+this.state.product_name+"&currentQuantity="+this.state.quantity
         $.ajax({
             url: refillUrl,
@@ -55,7 +61,7 @@ var AddProduct = React.createClass({
             cache: false,
             success: function (rows) {
                 if(rows["result"]){
-                    console.log("PRODUCT REFILLED CORRECTLY.")
+                    alert("PRODUCT ADDED CORRECTLY.")
                     this.props.reloadProducts()
                 }else{
                     alert("The specified product already exists.")
@@ -65,6 +71,9 @@ var AddProduct = React.createClass({
                 console.error(this.props.url, status, err.toString());
             }.bind(this)
         });
+    },
+    isNumber: function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     },
     handleChangeName: function(event) {
         this.setState({product_name: event.target.value});
@@ -287,11 +296,19 @@ var Transaction_panel = React.createClass({
         event.preventDefault()
         this.setState({prod_selected: event.target.value});
     },
+    isNumber: function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    },
     handleChangeQuantity: function(event) {
         event.preventDefault()
         this.setState({quantity: event.target.value});
     },
     handleBuy: function(event) {
+        if(!this.isNumber(this.state.quantity)){
+            alert("The indicated quantity is invalid. Please input only numeric values.")
+            return;
+        }
+
         var prods = this.props.products
         for (var i = 0; i < prods.length; i++){
             var obj = prods[i];
@@ -322,6 +339,11 @@ var Transaction_panel = React.createClass({
 
     },
     handleReserve: function(event) {
+        if(!this.isNumber(this.state.quantity)){
+            alert("The indicated quantity is invalid. Please input only numeric values.")
+            return;
+        }
+
         var prods = this.props.products
         for (var i = 0; i < prods.length; i++){
             var obj = prods[i];
@@ -359,19 +381,25 @@ var Transaction_panel = React.createClass({
         return (
             <div className="panel panel-default">
                 <h3>BUY/RESERVE PRODUCT PANEL</h3>
-                <form>
-                    <label>
-                        Customer name: {this.props.username}
-                    </label>
-                    <select className="form-control" value={this.state.prod_selected} onChange={this.handleProductSelection}>
-                        {productOptions}
-                    </select>
-                    <label>
-                        Quantity: <input type="text" onChange={this.handleChangeQuantity}/>
-                    </label>
-                    <button type="button" onClick={this.handleBuy}>BUY</button>
-                    <button type="button" onClick={this.handleReserve}>RESERVE</button>
-                </form>
+                    <form>
+                            <label>
+                                Customer name: {this.props.username}
+                            </label>
+                            <br/>
+                            <label>
+                                Select the product:
+                            </label>
+                            <select value={this.state.prod_selected} onChange={this.handleProductSelection}>
+                                {productOptions}
+                            </select>
+                            <br/>
+                            <label>
+                                Quantity: <input type="text" onChange={this.handleChangeQuantity}/>
+                            </label>
+                            <br/>
+                            <button type="button" onClick={this.handleBuy}>BUY</button>
+                            <button type="button" onClick={this.handleReserve}>RESERVE</button>
+                    </form>
             </div>
             );
     }
