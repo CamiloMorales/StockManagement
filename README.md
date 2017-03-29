@@ -4,4 +4,4 @@
 Programming exercise with Play Framework and Scala.
 
 ### Documentation
-TO run the project: ./activator run
+To run the project: ./activator run
