@@ -1,7 +1,7 @@
 # STOCK MANAGEMENT SYSTEM
 
 ### Description
-Programming exercise with Play Framework and Scala.
+Programming exercise with Play Framework, ReactJS and Scala.
 
 ### Documentation
 To run the project: ./activator run <br>
