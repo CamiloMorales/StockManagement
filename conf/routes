@@ -6,12 +6,17 @@
 GET     /                                       controllers.Application.index
 GET     /stock/addProduct                       controllers.StockManagement.addProduct(productName: String, currentQuantity: Int)
 GET     /stock/getAllProducts                   controllers.StockManagement.getAllProducts()
-GET     /stock/addCustomer                      controllers.StockManagement.addCustomer(userName: String, firstName:String, lastName:String)
+GET     /stock/addCustomer                      controllers.StockManagement.addCustomer(userName: String)
 GET     /stock/getAllCustomers                  controllers.StockManagement.getAllCustomers()
 GET     /stock/addTransaction                   controllers.StockManagement.addTransaction(customer_id: Int, product_id:Int, trans_type:String, quantity:Int, finished:Int)
 GET     /stock/getAllTransactions               controllers.StockManagement.getAllTransactions()
-GET     /stock/getAllTransactionsByCustomer     controllers.StockManagement.getAllTransactionsByCustomer(customer_id: Int)
+GET     /stock/getAllTransactionsByCustomer     controllers.StockManagement.getAllTransactionsByCustomer(username: String)
 GET     /stock/refillProduct                    controllers.StockManagement.refillProduct(prod_id: Int, quantity: Int)
+GET     /stock/customerSignIn                   controllers.StockManagement.signIn(username: String)
+GET     /stock/buyProduct                       controllers.StockManagement.buyProduct(username: String, prod_Id:Int, quantity:Int)
+GET     /stock/reserveProduct                   controllers.StockManagement.reserveProduct(username: String, prod_Id:Int, quantity:Int)
+GET     /stock/customerExists                   controllers.StockManagement.customerExists(username: String)
+GET     /stock/finishReserve                    controllers.StockManagement.finishReserve(transaction_id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)

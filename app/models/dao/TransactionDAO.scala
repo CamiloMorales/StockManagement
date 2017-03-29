@@ -1,12 +1,9 @@
 package models.dao
 
 import anorm._
-import models.Transaction
+import models.{CustomTransaction, Product, Transaction}
 import play.api.db.DB
 import play.api.Play.current
-
-
-import models.Product
 
 object TransactionDAO {
   def create(transaction: Transaction): Option[Long] = {
@@ -39,18 +36,34 @@ object TransactionDAO {
     }
   }
 
-  def getAllByCustomer(customer_id:Int): List[Transaction] = {
+  def getAllByCustomer(username:String): List[CustomTransaction] = {
     DB.withConnection { implicit c =>
       val results = SQL(
         """
-          | SELECT `id`, `customer_id`, `product_id`, `trans_type`, `quantity`, `finished`
-          | FROM `Trans`
-          | WHERE `customer_id`={userId}
-        """.stripMargin).apply()
+          | SELECT t.`id`, c.`user_name`, p.`name`, t.`trans_type`, t.`quantity`, t.`finished`
+          | FROM `trans` t JOIN `customer` c ON t.`customer_id` = c.`id`
+          |                JOIN `product` p ON t.`product_id` = p.`id`
+          | WHERE c.`user_name`={username}
+        """.stripMargin).on(
+        "username" -> username
+      ).apply()
 
       results.map { row =>
-        Transaction(row[Int]("id"), row[Int]("customer_id"), row[Int]("product_id"), row[String]("trans_type"), row[Int]("quantity"), row[Int]("finished"))
+        CustomTransaction(row[Int]("trans.id"), row[String]("customer.user_name"), row[String]("product.name"), row[String]("trans.trans_type"), row[Int]("trans.quantity"), row[Int]("trans.finished"))
       }.force.toList
+    }
+  }
+
+  def updateFinished(transaction_id:Int): Int = {
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+          | UPDATE `trans`
+          | SET `finished` = 1
+          | WHERE `id`= {transaction_id};
+        """.stripMargin).on(
+        "transaction_id" -> transaction_id
+      ).executeUpdate()
     }
   }
 }

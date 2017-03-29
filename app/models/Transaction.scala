@@ -24,9 +24,24 @@ object Transaction {
   def getAll(): List[Transaction] =
     TransactionDAO.getAll()
 
-  def getAllByCustomer(customer_id:Int): List[Transaction] =
-    TransactionDAO.getAllByCustomer(customer_id)
+  def getAllByCustomer(username:String): List[CustomTransaction] =
+    TransactionDAO.getAllByCustomer(username)
 
+  def updateFinished(transaction_id: Int): Int = {
+    TransactionDAO.updateFinished(transaction_id)
+  }
+}
+
+object CustomTransaction {
+  implicit val CustomTransactionWrites: Writes[CustomTransaction] = (
+    (JsPath \ "id").write[Int] and
+      (JsPath \ "customer_name").write[String] and
+      (JsPath \ "product_name").write[String] and
+      (JsPath \ "trans_type").write[String]and
+      (JsPath \ "quantity").write[Int] and
+      (JsPath \ "finished").write[Int]
+    )(unlift(CustomTransaction.unapply))
 }
 
 case class Transaction(id:Int, customer_id:Int, product_id:Int, trans_type:String, quantity:Int, finished:Int)
+case class CustomTransaction(id:Int, customer_name:String, product_name:String, trans_type:String, quantity:Int, finished:Int)

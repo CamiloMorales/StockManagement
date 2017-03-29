@@ -8,18 +8,27 @@ import play.api.libs.json._
 object Customer {
   implicit val CustomerWrites: Writes[Customer] = (
     (JsPath \ "id").write[Int] and
-    (JsPath \ "userName").write[String] and
-      (JsPath \ "firstName").write[String] and
-      (JsPath \ "lastName").write[String]
+    (JsPath \ "userName").write[String]
     )(unlift(Customer.unapply))
 
-  def add(userName: String, firstName: String, lastName: String): Option[Long] = {
-    val new_customer = Customer(-1, userName, firstName, lastName)
+  def add(userName: String): Option[Long] = {
+    val new_customer = Customer(-1, userName)
     CustomerDAO.create(new_customer)
   }
 
   def getAll(): List[Customer] =
     CustomerDAO.getAll()
+
+  def exists(username: String): Boolean = {
+    CustomerDAO.getByUsername(username) match {
+      case Some(customer) => true
+      case _ => false
+    }
+  }
+
+  def getByUsername(username: String): Option[Customer] = {
+    CustomerDAO.getByUsername(username)
+  }
 }
 
-case class Customer(id:Int, userName:String, firstName:String, lastName:String)
+case class Customer(id:Int, userName:String)

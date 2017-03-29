@@ -22,6 +22,8 @@ libraryDependencies ++= Seq(
   "org.webjars"     %  "jquery"         % "2.1.4"
 )
 
+libraryDependencies += evolutions
+
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 enablePlugins(SbtNativePackager)

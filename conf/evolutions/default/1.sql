@@ -8,9 +8,7 @@ CREATE TABLE product (
 
 CREATE TABLE customer (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_name   TEXT NOT NULL UNIQUE,
-  first_name   TEXT NOT NULL,
-  last_name   TEXT NOT NULL
+  user_name   TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE trans (

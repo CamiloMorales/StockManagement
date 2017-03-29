@@ -10,7 +10,7 @@ object ProductDAO {
     DB.withConnection { implicit c =>
       SQL(
         """
-          | INSERT INTO `Product` (`name`, `quantity`)
+          | INSERT INTO `product` (`name`, `quantity`)
           | VALUES ({productName}, {currentQuantity});
         """.stripMargin).on(
           "productName" -> product.productName,
@@ -44,6 +44,28 @@ object ProductDAO {
         "prod_id" -> prod_id,
         "quant" -> quantity
         ).executeUpdate()
+    }
+  }
+
+  def getProductByName(name:String): Option[Product] = {
+
+    val parser = {
+      SqlParser.get[Int]("id") ~
+        SqlParser.get[String]("name") ~
+        SqlParser.get[Int]("quantity") map {
+        case id~username~quantity => Product(id, username, quantity)
+      }
+    }
+
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+          | SELECT `id`,`name`,`quantity`
+          | FROM `Product`
+          | WHERE `name`= {name};
+        """.stripMargin).on(
+        "name" -> name
+      ).as(parser.singleOpt)
     }
   }
 }

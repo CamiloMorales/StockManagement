@@ -12,12 +12,10 @@ object CustomerDAO {
     DB.withConnection { implicit c =>
       SQL(
         """
-          | INSERT INTO `Customer` (`user_name`,`first_name`,`last_name`)
-          | VALUES ({userName},{firstName},{lastName});
+          | INSERT INTO `Customer` (`user_name`)
+          | VALUES ({userName});
         """.stripMargin).on(
-          "userName" -> customer.userName,
-          "firstName" -> customer.firstName,
-          "lastName" -> customer.lastName
+          "userName" -> customer.userName
         ).executeInsert()
     }
   }
@@ -26,13 +24,35 @@ object CustomerDAO {
     DB.withConnection { implicit c =>
       val results = SQL(
         """
-          | SELECT `id`,`user_name`,`first_name`,`last_name`
+          | SELECT `id`,`user_name`
           | FROM `Customer`;
         """.stripMargin).apply()
 
       results.map { row =>
-        Customer(row[Int]("id"), row[String]("user_name"),row[String]("first_name"),row[String]("last_name"))
+        Customer(row[Int]("id"), row[String]("user_name"))
       }.force.toList
     }
   }
+
+  def getByUsername(username:String): Option[Customer] = {
+
+    val parser = {
+      SqlParser.get[Int]("id") ~
+        SqlParser.get[String]("user_name") map {
+        case id~username => Customer(id, username)
+      }
+    }
+
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+          | SELECT `id`,`user_name`
+          | FROM `Customer`
+          | WHERE `user_name`= {user_name};
+        """.stripMargin).on(
+        "user_name" -> username
+      ).as(parser.singleOpt)
+    }
+  }
+
 }
